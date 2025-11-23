@@ -1,21 +1,28 @@
-version: "3.9"
+version: '3.9'
 
 services:
-  user-service:
-    build: ./user-service
+  nginx:
+    build: ./nginx
     ports:
-      - "3001:3001"
+      - "80:80"
     networks:
       - finance-net
+    deploy:
+      replicas: 1
+
+  user-service:
+    build: ./user-service
+    networks:
+      - finance-net
+    deploy:
+      replicas: 2
 
   transaction-service:
     build: ./transaction-service
-    ports:
-      - "3002:3002"
     networks:
       - finance-net
-    depends_on:
-      - user-service
+    deploy:
+      replicas: 2
 
 networks:
   finance-net:
